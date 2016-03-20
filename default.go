@@ -2,6 +2,10 @@ package glogger
 
 var _default = Create(WARN)
 
+func Default() Logger {
+	return _default
+}
+
 func SetLevel(logLevel LogLevel) {
 	_default.SetLevel(logLevel)
 }
