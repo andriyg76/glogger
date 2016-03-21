@@ -2,8 +2,8 @@ package glogger
 
 import (
 	"fmt"
-	"os"
 	"log"
+	"os"
 )
 
 type LogLevel int8
@@ -38,7 +38,7 @@ var stdout = log.New(os.Stdout, "", log.LstdFlags)
 var stderr = log.New(os.Stderr, "", log.LstdFlags)
 
 func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
-	fmt.Fprintf(os.Stderr, "Logger level is %s print level %s\n", l.logLevel, logLevel)
+	// fmt.Fprintf(os.Stderr, "Logger level is %s print level %s\n", l.logLevel, logLevel)
 	if logLevel >= l.logLevel {
 		var out *log.Logger
 		out_name := ""
@@ -49,10 +49,10 @@ func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
 			out = stdout
 			out_name = "stdout"
 		}
-		fmt.Fprintf(os.Stderr, "Will log to %s \n", out_name)
+		// fmt.Fprintf(os.Stderr, "Will log to %s \n", out_name)
 		out.Print(logLevel, " ", fmt.Sprintf(format, objs...))
 	} else {
-		fmt.Fprintf(os.Stderr, "Will not write log\n")
+		// fmt.Fprintf(os.Stderr, "Will not write log\n")
 	}
 }
 
@@ -77,8 +77,6 @@ func (l *logger) Error(format string, objs ...interface{}) {
 }
 
 func (l *logger) SetLevel(logLevel LogLevel) {
-	if l.logLevel != logLevel {
-		fmt.Fprintf(os.Stderr, "Set logger from %s level to %s\n", l.logLevel, logLevel)
-		l.logLevel = logLevel
-	}
+	// if l.logLevel != logLevel { fmt.Fprintf(os.Stderr, "Set logger from %s level to %s\n", l.logLevel, logLevel) }
+	l.logLevel = logLevel
 }
