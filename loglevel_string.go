@@ -9,8 +9,9 @@ const _LogLevel_name = "TRACEDEBUGINFOWARNERROR"
 var _LogLevel_index = [...]uint8{0, 5, 10, 14, 18, 23}
 
 func (i LogLevel) String() string {
-	if i >= LogLevel(len(_LogLevel_index)-1) {
-		return fmt.Sprintf("LogLevel(%d)", i)
+	i -= -2
+	if i < 0 || i >= LogLevel(len(_LogLevel_index)-1) {
+		return fmt.Sprintf("LogLevel(%d)", i+-2)
 	}
 	return _LogLevel_name[_LogLevel_index[i]:_LogLevel_index[i+1]]
 }
