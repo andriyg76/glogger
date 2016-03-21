@@ -41,13 +41,13 @@ func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
 	// fmt.Fprintf(os.Stderr, "Logger level is %s print level %s\n", l.logLevel, logLevel)
 	if logLevel >= l.logLevel {
 		var out *log.Logger
-		out_name := ""
+//		out_name := ""
 		if logLevel >= WARN {
 			out = stderr
-			out_name = "stderr"
+//			out_name = "stderr"
 		} else {
 			out = stdout
-			out_name = "stdout"
+//			out_name = "stdout"
 		}
 		// fmt.Fprintf(os.Stderr, "Will log to %s \n", out_name)
 		out.Print(logLevel, " ", fmt.Sprintf(format, objs...))
