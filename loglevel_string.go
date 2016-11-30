@@ -4,9 +4,9 @@ package glogger
 
 import "fmt"
 
-const _LogLevel_name = "TRACEDEBUGINFOWARNERROR"
+const _LogLevel_name = "TRACEDEBUGINFOWARNERRORPANICFATAL"
 
-var _LogLevel_index = [...]uint8{0, 5, 10, 14, 18, 23}
+var _LogLevel_index = [...]uint8{0, 5, 10, 14, 18, 23, 28, 33}
 
 func (i LogLevel) String() string {
 	i -= -2

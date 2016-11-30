@@ -29,3 +29,11 @@ func Warn(format string, objs ...interface{}) {
 func Error(format string, objs ...interface{}) {
 	_default.Error(format, objs)
 }
+
+func Panic(format string, objs ...interface{})  {
+	_default.Panic(format, objs)
+}
+
+func Fatal(format string, objs ...interface{})  {
+	_default.Fatal(format, objs)
+}

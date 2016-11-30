@@ -24,6 +24,19 @@ func init() {
 	stderr = log.New(&se, "", log.LstdFlags)
 }
 
+func TestPanic(t *testing.T) {
+	_logger := Create(FATAL)
+
+	defer func () {
+		r := recover()
+		assert.NotNil(t, r)
+
+		assert.Equal(t, r, "Panic panic")
+	} ()
+
+	_logger.Panic("Panic %s", "panic")
+}
+
 func TestLevels(t *testing.T) {
 	var _logger = Create(TRACE)
 
