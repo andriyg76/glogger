@@ -21,11 +21,17 @@ const (
 type Logger interface {
 
 	Log(LogLevel LogLevel, format string, objs ...interface{})
-	Debug(format string, objs ...interface{})
+	Logger(LogLevel LogLevel) *log.Logger
 	Trace(format string, objs ...interface{})
+	TraceLogger() *log.Logger
+	Debug(format string, objs ...interface{})
+//	DebugLogger() *log.Logger
 	Info(format string, objs ...interface{})
+//	InfoLogger() *log.Logger
 	Warn(format string, objs ...interface{})
+//	WarnLogger() *log.Logger
 	Error(format string, objs ...interface{})
+//	ErrorLogger() *log.Logger
 	Panic(format string, objs ...interface{})
 	Fatal(format string, objs ...interface{})
 	SetLevel(LogLevel)
@@ -44,6 +50,22 @@ func Create(logLevel LogLevel) Logger {
 
 var stdout = log.New(os.Stdout, "", log.LstdFlags)
 var stderr = log.New(os.Stderr, "", log.LstdFlags)
+
+func (l logger) Logger(logLevel LogLevel) *log.Logger {
+	if logLevel > l.logLevel {
+		return nil
+	}
+
+	if logLevel >= WARN {
+		return stderr
+	} else {
+		return stdout
+	}
+}
+
+func (l logger) TraceLogger() *log.Logger {
+	return l.Logger(TRACE)
+}
 
 func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
 //	fmt.Fprintf(os.Stderr, "Logger level is %s print level %s\n", l.logLevel, logLevel)
