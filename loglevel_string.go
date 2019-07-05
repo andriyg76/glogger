@@ -4,14 +4,14 @@ package glogger
 
 import "fmt"
 
-const _LogLevel_name = "TRACEDEBUGINFOWARNERRORPANICFATAL"
+const loglevelName = "TRACEDEBUGINFOWARNERRORPANICFATAL"
 
-var _LogLevel_index = [...]uint8{0, 5, 10, 14, 18, 23, 28, 33}
+var loglevelIndex = [...]uint8{0, 5, 10, 14, 18, 23, 28, 33}
 
 func (i LogLevel) String() string {
 	i -= -2
-	if i < 0 || i >= LogLevel(len(_LogLevel_index)-1) {
+	if i < 0 || i >= LogLevel(len(loglevelIndex)-1) {
 		return fmt.Sprintf("LogLevel(%d)", i+-2)
 	}
-	return _LogLevel_name[_LogLevel_index[i]:_LogLevel_index[i+1]]
+	return loglevelName[loglevelIndex[i]:loglevelIndex[i+1]]
 }

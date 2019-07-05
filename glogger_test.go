@@ -1,9 +1,9 @@
 package glogger
 
 import (
-	"testing"
-	"log"
 	"github.com/stretchr/testify/assert"
+	"log"
+	"testing"
 )
 
 type ioWriterMock struct {
@@ -66,15 +66,15 @@ func TestLevels(t *testing.T) {
 	checkLog(t, _logger, ERROR, str, ERROR, "", str)
 }
 
-func checkLog(t *testing.T, _logger Logger, ll LogLevel, str string, pl LogLevel, std_out string, stderr_out string) {
+func checkLog(t *testing.T, _logger Logger, ll LogLevel, str string, pl LogLevel, stdOut string, stderrOut string) {
 	_logger.SetLevel(ll)
 
 	se.string = ""
 	so.string = ""
 
 	_logger.Log(pl, str)
-	assertOut(t, pl, so.string, std_out, "stdout")
-	assertOut(t, pl, se.string, stderr_out, "stderr")
+	assertOut(t, pl, so.string, stdOut, "stdout")
+	assertOut(t, pl, se.string, stderrOut, "stderr")
 }
 
 func assertOut(t *testing.T, pl LogLevel, actual, expected, stream string) {
