@@ -7,7 +7,7 @@ func Default() Logger {
 }
 
 func SetLevel(logLevel LogLevel) {
-	_default.SetLevel(logLevel)
+	_default = Create(logLevel)
 }
 
 func Trace(format string, objs ...interface{}) {
@@ -30,10 +30,10 @@ func Error(format string, objs ...interface{}) {
 	_default.Error(format, objs)
 }
 
-func Panic(format string, objs ...interface{})  {
+func Panic(format string, objs ...interface{}) {
 	_default.Panic(format, objs)
 }
 
-func Fatal(format string, objs ...interface{})  {
+func Fatal(format string, objs ...interface{}) {
 	_default.Fatal(format, objs)
 }
