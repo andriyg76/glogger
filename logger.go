@@ -6,19 +6,49 @@ import (
 	"os"
 )
 
-type LogLevel int8
+type logLevel struct {
+	prefix string
+	weight int
+}
 
-const (
-	TRACE LogLevel = -2
-	DEBUG LogLevel = -1
-	INFO  LogLevel = 0
-	WARN  LogLevel = 1
-	ERROR LogLevel = 2
-	PANIC LogLevel = 3
-	FATAL LogLevel = 4
-)
+var TRACE = logLevel{
+	prefix: "[trace]",
+	weight: -2,
+}
 
-//go:generate stringer -type LogLevel
+var DEBUG = logLevel{
+	prefix: "[debug]",
+	weight: -1,
+}
+
+var INFO = logLevel{
+	prefix: "[info ]",
+	weight: 0,
+}
+
+var WARN = logLevel{
+	prefix: "[warn ]",
+	weight: 1,
+}
+
+var ERROR = logLevel{
+	prefix: "[error]",
+	weight: 2,
+}
+
+var PANIC = logLevel{
+	prefix: "[trace]",
+	weight: 2,
+}
+
+var FATAL = logLevel{
+	prefix: "[fatal]",
+	weight: 2,
+}
+
+func (l logLevel) String() string {
+	return l.prefix
+}
 
 type Output interface {
 	Printf(format string, objs ...interface{})
@@ -53,25 +83,31 @@ type Logger interface {
 	InfoLogger
 	ErrorLogger
 
-	Log(LogLevel LogLevel, format string, objs ...interface{})
-	Logger(LogLevel LogLevel) Output
+	Log(LogLevel logLevel, format string, objs ...interface{})
+	Logger(LogLevel logLevel) Output
 
 	Panic(format string, objs ...interface{})
 	Fatal(format string, objs ...interface{})
 }
 
 type logger struct {
-	logLevel LogLevel
+	logLevel logLevel
+	out      *log.Logger
+	err      *log.Logger
 }
 
 //go:generate command stringer -type LogLevel
 
-func Create(logLevel LogLevel) Logger {
-	return logger{logLevel}
+func Create(logLevel logLevel) Logger {
+	return logger{
+		logLevel: logLevel,
+		err:      _stderr,
+		out:      _stdout,
+	}
 }
 
-var stdout = log.New(os.Stdout, "", log.LstdFlags)
-var stderr = log.New(os.Stderr, "", log.LstdFlags)
+var _stdout = log.New(os.Stdout, "", log.LstdFlags)
+var _stderr = log.New(os.Stderr, "", log.LstdFlags)
 
 type dumbLogger struct{}
 
@@ -79,15 +115,27 @@ func (d dumbLogger) Printf(format string, objs ...interface{}) {}
 
 var dumbLoggerInstance = dumbLogger{}
 
-func (l logger) Logger(logLevel LogLevel) Output {
-	if logLevel < l.logLevel {
-		return dumbLoggerInstance
-	}
+type prefixOutput struct {
+	prefix string
+	out    Output
+}
 
-	if logLevel >= WARN {
-		return stderr
+func (p prefixOutput) Printf(format string, objs ...interface{}) {
+	p.out.Printf(p.prefix+" "+format, objs...)
+}
+
+func (l logger) Logger(logLevel logLevel) Output {
+	var out Output
+	if logLevel.weight < l.logLevel.weight {
+		out = dumbLoggerInstance
+	} else if logLevel.weight >= WARN.weight {
+		out = l.err
 	} else {
-		return stdout
+		out = l.out
+	}
+	return prefixOutput{
+		prefix: logLevel.prefix,
+		out:    out,
 	}
 }
 
@@ -95,7 +143,7 @@ func (l logger) TraceLogger() Output {
 	return l.Logger(TRACE)
 }
 
-func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
+func (l logger) Log(logLevel logLevel, format string, objs ...interface{}) {
 	l.Logger(logLevel).Printf(format, objs...)
 
 	if logLevel == PANIC {

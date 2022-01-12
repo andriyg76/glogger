@@ -17,20 +17,21 @@ func (f *ioWriterMock) Write(buff []byte) (int, error) {
 	return len(buff), nil
 }
 
-var so, se = ioWriterMock{"", stdout}, ioWriterMock{"", stderr}
+var so, se = ioWriterMock{"", _stdout}, ioWriterMock{"", _stderr}
 
 func init() {
-	stdout = log.New(&so, "", log.LstdFlags)
-	stderr = log.New(&se, "", log.LstdFlags)
+	_stdout = log.New(&so, "", log.LstdFlags)
+	_stderr = log.New(&se, "", log.LstdFlags)
 }
 
 func TestPanic(t *testing.T) {
-	_logger := Create(FATAL)
+	_logger := Create(TRACE)
 
 	defer func() {
 		r := recover()
 		assert.NotNil(t, r)
 
+		_logger.Info("Recover from panic: %s", r)
 		assert.Equal(t, r, "Panic panic")
 	}()
 
@@ -64,7 +65,7 @@ func TestLevels(t *testing.T) {
 	checkLog(t, ERROR, str, ERROR, "", str)
 }
 
-func checkLog(t *testing.T, ll LogLevel, str string, pl LogLevel, std_out string, stderr_out string) {
+func checkLog(t *testing.T, ll logLevel, str string, pl logLevel, std_out string, stderr_out string) {
 	_logger := Create(ll)
 
 	se.string = ""
@@ -75,7 +76,7 @@ func checkLog(t *testing.T, ll LogLevel, str string, pl LogLevel, std_out string
 	assertOut(t, pl, se.string, stderr_out, "stderr")
 }
 
-func assertOut(t *testing.T, pl LogLevel, actual, expected, stream string) {
+func assertOut(t *testing.T, pl logLevel, actual, expected, stream string) {
 	if actual == "" && expected == "" {
 		return
 	}

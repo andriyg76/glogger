@@ -1,12 +1,12 @@
 package glogger
 
-var _default = Create(WARN)
+var _default = Create(INFO)
 
 func Default() Logger {
 	return _default
 }
 
-func SetLevel(logLevel LogLevel) {
+func SetLevel(logLevel logLevel) {
 	_default = Create(logLevel)
 }
 
