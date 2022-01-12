@@ -6,7 +6,7 @@ func Default() Logger {
 	return _default
 }
 
-func SetLevel(logLevel logLevel) {
+func SetLevel(logLevel LogLevel) {
 	_default = Create(logLevel)
 }
 
@@ -36,4 +36,8 @@ func Panic(format string, objs ...interface{}) {
 
 func Fatal(format string, objs ...interface{}) {
 	_default.Fatal(format, objs)
+}
+
+func Log(level LogLevel, format string, objs ...interface{}) {
+	_default.Log(level, format, objs)
 }

@@ -6,47 +6,47 @@ import (
 	"os"
 )
 
-type logLevel struct {
+type LogLevel struct {
 	prefix string
 	weight int
 }
 
-var TRACE = logLevel{
+var TRACE = LogLevel{
 	prefix: "[trace]",
 	weight: -2,
 }
 
-var DEBUG = logLevel{
+var DEBUG = LogLevel{
 	prefix: "[debug]",
 	weight: -1,
 }
 
-var INFO = logLevel{
+var INFO = LogLevel{
 	prefix: "[info ]",
 	weight: 0,
 }
 
-var WARN = logLevel{
+var WARN = LogLevel{
 	prefix: "[warn ]",
 	weight: 1,
 }
 
-var ERROR = logLevel{
+var ERROR = LogLevel{
 	prefix: "[error]",
 	weight: 2,
 }
 
-var PANIC = logLevel{
+var PANIC = LogLevel{
 	prefix: "[trace]",
 	weight: 2,
 }
 
-var FATAL = logLevel{
+var FATAL = LogLevel{
 	prefix: "[fatal]",
 	weight: 2,
 }
 
-func (l logLevel) String() string {
+func (l LogLevel) String() string {
 	return l.prefix
 }
 
@@ -83,22 +83,22 @@ type Logger interface {
 	InfoLogger
 	ErrorLogger
 
-	Log(LogLevel logLevel, format string, objs ...interface{})
-	Logger(LogLevel logLevel) Output
+	Log(LogLevel LogLevel, format string, objs ...interface{})
+	Logger(LogLevel LogLevel) Output
 
 	Panic(format string, objs ...interface{})
 	Fatal(format string, objs ...interface{})
 }
 
 type logger struct {
-	logLevel logLevel
+	logLevel LogLevel
 	out      *log.Logger
 	err      *log.Logger
 }
 
 //go:generate command stringer -type LogLevel
 
-func Create(logLevel logLevel) Logger {
+func Create(logLevel LogLevel) Logger {
 	return logger{
 		logLevel: logLevel,
 		err:      _stderr,
@@ -124,7 +124,7 @@ func (p prefixOutput) Printf(format string, objs ...interface{}) {
 	p.out.Printf(p.prefix+" "+format, objs...)
 }
 
-func (l logger) Logger(logLevel logLevel) Output {
+func (l logger) Logger(logLevel LogLevel) Output {
 	var out Output
 	if logLevel.weight < l.logLevel.weight {
 		out = dumbLoggerInstance
@@ -143,7 +143,7 @@ func (l logger) TraceLogger() Output {
 	return l.Logger(TRACE)
 }
 
-func (l logger) Log(logLevel logLevel, format string, objs ...interface{}) {
+func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
 	l.Logger(logLevel).Printf(format, objs...)
 
 	if logLevel == PANIC {

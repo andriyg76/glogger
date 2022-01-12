@@ -65,7 +65,7 @@ func TestLevels(t *testing.T) {
 	checkLog(t, ERROR, str, ERROR, "", str)
 }
 
-func checkLog(t *testing.T, ll logLevel, str string, pl logLevel, std_out string, stderr_out string) {
+func checkLog(t *testing.T, ll LogLevel, str string, pl LogLevel, std_out string, stderr_out string) {
 	_logger := Create(ll)
 
 	se.string = ""
@@ -76,7 +76,7 @@ func checkLog(t *testing.T, ll logLevel, str string, pl logLevel, std_out string
 	assertOut(t, pl, se.string, stderr_out, "stderr")
 }
 
-func assertOut(t *testing.T, pl logLevel, actual, expected, stream string) {
+func assertOut(t *testing.T, pl LogLevel, actual, expected, stream string) {
 	if actual == "" && expected == "" {
 		return
 	}
