@@ -84,7 +84,7 @@ type Logger interface {
 	ErrorLogger
 
 	Log(LogLevel LogLevel, format string, objs ...interface{})
-	Logger(LogLevel LogLevel) Output
+	GetOutput(LogLevel LogLevel) Output
 
 	Panic(format string, objs ...interface{})
 	Fatal(format string, objs ...interface{})
@@ -115,16 +115,27 @@ func (d dumbLogger) Printf(format string, objs ...interface{}) {}
 
 var dumbLoggerInstance = dumbLogger{}
 
-type prefixOutput struct {
-	prefix string
-	out    Output
+type loggerWithLevel struct {
+	logLevel *LogLevel
+	logger   *logger
 }
 
-func (p prefixOutput) Printf(format string, objs ...interface{}) {
-	p.out.Printf(p.prefix+" "+format, objs...)
+func (l loggerWithLevel) Printf(format string, objs ...interface{}) {
+	l.logger.Log(*l.logLevel, format, objs...)
 }
 
-func (l logger) Logger(logLevel LogLevel) Output {
+func (l logger) GetOutput(logLevel LogLevel) Output {
+	return loggerWithLevel{
+		logLevel: &logLevel,
+		logger:   &l,
+	}
+}
+
+func (l logger) TraceLogger() Output {
+	return l.GetOutput(TRACE)
+}
+
+func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
 	var out Output
 	if logLevel.weight < l.logLevel.weight {
 		out = dumbLoggerInstance
@@ -133,18 +144,8 @@ func (l logger) Logger(logLevel LogLevel) Output {
 	} else {
 		out = l.out
 	}
-	return prefixOutput{
-		prefix: logLevel.prefix,
-		out:    out,
-	}
-}
 
-func (l logger) TraceLogger() Output {
-	return l.Logger(TRACE)
-}
-
-func (l logger) Log(logLevel LogLevel, format string, objs ...interface{}) {
-	l.Logger(logLevel).Printf(format, objs...)
+	out.Printf(logLevel.prefix+" "+format, objs...)
 
 	if logLevel == PANIC {
 		panic(fmt.Sprintf(format, objs...))
@@ -159,7 +160,7 @@ func (l logger) Debug(format string, objs ...interface{}) {
 }
 
 func (l logger) DebugLogger() Output {
-	return l.Logger(DEBUG)
+	return l.GetOutput(DEBUG)
 }
 
 func (l logger) Trace(format string, objs ...interface{}) {

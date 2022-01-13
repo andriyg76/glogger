@@ -31,13 +31,17 @@ func Error(format string, objs ...interface{}) {
 }
 
 func Panic(format string, objs ...interface{}) {
-	_default.Panic(format, objs)
+	_default.Panic(format, objs...)
 }
 
 func Fatal(format string, objs ...interface{}) {
-	_default.Fatal(format, objs)
+	_default.Fatal(format, objs...)
 }
 
 func Log(level LogLevel, format string, objs ...interface{}) {
-	_default.Log(level, format, objs)
+	_default.Log(level, format, objs...)
+}
+
+func OutputLevel(level LogLevel) Output {
+	return _default.GetOutput(level)
 }
