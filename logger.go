@@ -51,29 +51,29 @@ func (l LogLevel) String() string {
 }
 
 type Output interface {
-	Printf(format string, objs ...interface{})
+	Printf(format string, a ...interface{})
 }
 
 type TraceLogger interface {
-	Trace(format string, objs ...interface{})
+	Trace(format string, a ...interface{})
 	TraceLogger() Output
 }
 
 type DebugLogger interface {
-	Debug(format string, objs ...interface{})
+	Debug(format string, a ...interface{})
 	DebugLogger() Output
 }
 
 type InfoLogger interface {
-	Info(format string, objs ...interface{})
+	Info(format string, a ...interface{})
 }
 
 type WarnLogger interface {
-	Warn(format string, objs ...interface{})
+	Warn(format string, a ...interface{})
 }
 
 type ErrorLogger interface {
-	Error(format string, objs ...interface{})
+	Error(format string, a ...interface{})
 }
 
 type Logger interface {
@@ -83,11 +83,12 @@ type Logger interface {
 	InfoLogger
 	ErrorLogger
 
-	Log(LogLevel LogLevel, format string, objs ...interface{})
+	// Log formats according to a format specifier
+	Log(LogLevel LogLevel, format string, a ...interface{})
 	GetOutput(LogLevel LogLevel) Output
 
-	Panic(format string, objs ...interface{})
-	Fatal(format string, objs ...interface{})
+	Panic(format string, a ...interface{})
+	Fatal(format string, a ...interface{})
 }
 
 type logger struct {
