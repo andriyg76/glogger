@@ -74,6 +74,13 @@ func checkLog(t *testing.T, ll LogLevel, str string, pl LogLevel, std_out string
 	_logger.Log(pl, str)
 	assertOut(t, pl, so.string, std_out, "stdout")
 	assertOut(t, pl, se.string, stderr_out, "stderr")
+
+	if ll.weight <= pl.weight {
+		assert.Truef(t, _logger.IsEnabled(pl), "%s should be enabled for %s", pl, ll)
+	}
+	if ll.weight > pl.weight {
+		assert.Truef(t, !_logger.IsEnabled(pl), "%s should not be enabled for %s", pl, ll)
+	}
 }
 
 func assertOut(t *testing.T, pl LogLevel, actual, expected, stream string) {

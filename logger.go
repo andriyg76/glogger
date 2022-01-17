@@ -57,23 +57,28 @@ type Output interface {
 type TraceLogger interface {
 	Trace(format string, a ...interface{})
 	TraceLogger() Output
+	IsTrace() bool
 }
 
 type DebugLogger interface {
 	Debug(format string, a ...interface{})
+	IsDebug() bool
 	DebugLogger() Output
 }
 
 type InfoLogger interface {
 	Info(format string, a ...interface{})
+	IsInfo() bool
 }
 
 type WarnLogger interface {
 	Warn(format string, a ...interface{})
+	IsWarn() bool
 }
 
 type ErrorLogger interface {
 	Error(format string, a ...interface{})
+	IsError() bool
 }
 
 type Logger interface {
@@ -85,6 +90,7 @@ type Logger interface {
 
 	// Log formats according to a format specifier
 	Log(LogLevel LogLevel, format string, a ...interface{})
+	IsEnabled(logLevel LogLevel) bool
 	GetOutput(LogLevel LogLevel) Output
 
 	Panic(format string, a ...interface{})
@@ -95,6 +101,30 @@ type logger struct {
 	logLevel LogLevel
 	out      *log.Logger
 	err      *log.Logger
+}
+
+func (l logger) IsDebug() bool {
+	return l.IsEnabled(DEBUG)
+}
+
+func (l logger) IsTrace() bool {
+	return l.IsEnabled(TRACE)
+}
+
+func (l logger) IsWarn() bool {
+	return l.IsEnabled(WARN)
+}
+
+func (l logger) IsInfo() bool {
+	return l.IsEnabled(INFO)
+}
+
+func (l logger) IsError() bool {
+	return l.IsEnabled(ERROR)
+}
+
+func (l logger) IsEnabled(logLevel LogLevel) bool {
+	return logLevel.weight >= l.logLevel.weight
 }
 
 //go:generate command stringer -type LogLevel
