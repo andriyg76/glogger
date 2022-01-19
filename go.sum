@@ -1,3 +1,7 @@
+github.com/andriyg76/glog v0.1.5 h1:HvpxX5GtzH0Rk3hqU1aAn5BpMP042yvsdKFzru14www=
+github.com/andriyg76/glog v0.1.5/go.mod h1:h4lyo4C+Q+FqRrno0Cz56FRgHrrK/dRQ+4PsqQpqBto=
+github.com/andriyg76/glog v0.1.6 h1:UluEjz/swpaR0hIOJbQxIeisntwT0DSfVvFvtpWZ/50=
+github.com/andriyg76/glog v0.1.6/go.mod h1:h4lyo4C+Q+FqRrno0Cz56FRgHrrK/dRQ+4PsqQpqBto=
 github.com/davecgh/go-spew v1.1.0 h1:ZDRjVQ15GmhC3fiQ8ni8+OwkZQO4DARzQgrnXU1Liz8=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
